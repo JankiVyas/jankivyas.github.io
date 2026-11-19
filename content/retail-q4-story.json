@@ -1,0 +1,162 @@
+{
+  "title": "From Scattered Data to Clear Q4 Direction",
+  "subtitle": "Executive Revenue & Customer Retention Brief | Studio Clarity",
+  "source": "data/retail-q4/retail_performance.csv",
+  "slides": [
+    {
+      "number": 1,
+      "type": "cover",
+      "title": "From Scattered Data to Clear Q4 Direction",
+      "subtitle": "Executive Revenue & Customer Retention Brief | Studio Clarity",
+      "context": "Retail performance story across North America, Europe, APAC, and LATAM",
+      "source": "data/retail-q4/retail_performance.csv"
+    },
+    {
+      "number": 2,
+      "type": "kpi_summary",
+      "title": "Three signals set the Q4 direction",
+      "kpis": [
+        {
+          "value": "+22%",
+          "label": "Repeat Orders",
+          "detail": "Retention momentum creates a clearer path to Q4 growth"
+        },
+        {
+          "value": "-14%",
+          "label": "Fulfillment Drag",
+          "detail": "Operational friction is falling across the customer journey"
+        },
+        {
+          "value": "$1.4M",
+          "label": "Untapped Upside",
+          "detail": "Prioritized revenue opportunity ready for executive action"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "type": "before_after",
+      "title": "From fragmented reporting to one decision view",
+      "before": {
+        "label": "Before",
+        "headline": "6 messy regional CSVs",
+        "description": "Disconnected exports, inconsistent fields, slow reconciliations, and competing views of performance",
+        "pain_points": [
+          "Regional data landed in separate files",
+          "Definitions and formats varied",
+          "Leadership waited for a manual consolidation"
+        ]
+      },
+      "after": {
+        "label": "After",
+        "headline": "One clear, connected view",
+        "description": "A consistent regional and segment readout aligned around revenue, margin, retention, LTV, and CAC",
+        "benefits": [
+          "One source of truth",
+          "Comparable quarter-over-quarter trends",
+          "Faster, board-ready decisions"
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "type": "live_data_chart",
+      "title": "The data points to Mid-Market as the margin lever",
+      "source": "data/retail-q4/retail_performance.csv",
+      "chart": {
+        "metric": "Revenue_USD",
+        "aggregation": "sum by Segment for Q3 2026",
+        "highlight": "Mid-Market",
+        "insight": "Mid-Market combines approximately 2.4x higher LTV than SMB/DTC with the majority of Q3 margin growth"
+      },
+      "supporting_metrics": [
+        "Gross margin",
+        "Repeat order rate",
+        "Average LTV",
+        "Customer acquisition cost"
+      ]
+    },
+    {
+      "number": 5,
+      "type": "data_flow",
+      "title": "One repeatable path from inputs to action",
+      "steps": [
+        {
+          "number": 1,
+          "title": "Unified Inputs",
+          "description": "Regional revenue, accounts, margin, retention, LTV, and acquisition data"
+        },
+        {
+          "number": 2,
+          "title": "Clean Business Logic",
+          "description": "Standardize fields, aggregate quarters and segments, and calculate weighted KPIs"
+        },
+        {
+          "number": 3,
+          "title": "Board-Ready View",
+          "description": "Turn the evidence into a focused Q4 narrative, chart, and action plan"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "type": "roadmap",
+      "title": "90-day roadmap: turn the signal into execution",
+      "period": "Q4 2026",
+      "phases": [
+        {
+          "period": "Days 1–30",
+          "label": "Focus",
+          "actions": [
+            "Validate segment and regional baselines",
+            "Prioritize Mid-Market account cohorts",
+            "Define owners for retention and fulfillment measures"
+          ],
+          "outcome": "A single approved Q4 scorecard"
+        },
+        {
+          "period": "Days 31–60",
+          "label": "Activate",
+          "actions": [
+            "Launch targeted Mid-Market upsell motions",
+            "Reduce fulfillment bottlenecks in priority regions",
+            "Align acquisition spend with LTV evidence"
+          ],
+          "outcome": "Pilots prove lift in repeat orders and margin"
+        },
+        {
+          "period": "Days 61–90",
+          "label": "Scale",
+          "actions": [
+            "Expand winning retention plays",
+            "Shift budget toward highest-LTV segments",
+            "Publish an executive monthly readout"
+          ],
+          "outcome": "A repeatable path toward the $1.4M upside"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "type": "closing_cta",
+      "title": "Make Q4 the quarter that follows the clearest signal",
+      "recommendation": "Concentrate capacity and investment on Mid-Market growth, retention, and fulfillment improvements",
+      "cta": "Approve the 90-day Q4 action plan",
+      "source": "data/retail-q4/retail_performance.csv"
+    }
+  ],
+  "headline_kpis": [
+    {
+      "value": "+22%",
+      "label": "Repeat Orders"
+    },
+    {
+      "value": "-14%",
+      "label": "Fulfillment Drag"
+    },
+    {
+      "value": "$1.4M",
+      "label": "Untapped Upside"
+    }
+  ]
+}
