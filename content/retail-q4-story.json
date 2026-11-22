@@ -61,13 +61,13 @@
     {
       "number": 4,
       "type": "live_data_chart",
-      "title": "The data points to Mid-Market as the margin lever",
+      "title": "Mid-Market revenue rose 24% from Q1 to Q3",
       "source": "data/retail-q4/retail_performance.csv",
       "chart": {
         "metric": "Revenue_USD",
-        "aggregation": "sum by Segment for Q3 2026",
-        "highlight": "Mid-Market",
-        "insight": "Mid-Market combines approximately 2.4x higher LTV than SMB/DTC with the majority of Q3 margin growth"
+        "aggregation": "sum by Quarter for Mid-Market, Q1–Q3 2026",
+        "highlight": "Q3 2026",
+        "insight": "Mid-Market revenue grew 24% from Q1 to Q3; its Q3 gross-profit increase was the largest among segments versus Q2"
       },
       "supporting_metrics": [
         "Gross margin",

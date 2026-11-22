@@ -4,403 +4,757 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#FAF8F5">
-  <meta name="description" content="An executive retail revenue and customer retention brief with a live view of customer lifetime value.">
-  <title>From Scattered Data to Clear Q4 Direction — Studio Clarity</title>
+  <meta name="description" content="An executive retail revenue and customer retention brief for Q4 2026.">
+  <title>From Scattered Data to Clear Q4 Direction | Studio Clarity</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
   <style>
     :root {
       color-scheme: light;
       --cream: #FAF8F5;
-      --paper: #FFFFFF;
+      --white: #FFFFFF;
       --ink: #1E1E1C;
       --muted: #5C5B57;
-      --clay: #B85D38;
-      --line: #E5E0D8;
+      --terracotta: #B85D38;
+      --hairline: #E5E0D8;
       --sand: #DCD5C9;
       --serif: Georgia, "Times New Roman", serif;
       --sans: Inter, Arial, sans-serif;
-      --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --mono: "DM Mono", monospace;
     }
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+
+    * { box-sizing: border-box; }
     body {
       min-width: 320px;
       min-height: 100vh;
       margin: 0;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--cream);
-      background-image: radial-gradient(rgba(30, 30, 28, .09) .65px, transparent .65px);
-      background-size: 18px 18px;
       color: var(--ink);
-      font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
+      background-color: var(--cream);
+      background-image: radial-gradient(#d9d3ca 0.55px, transparent 0.55px);
+      background-size: 15px 15px;
+      font: 15px/1.6 var(--sans);
     }
+
     button, a { font: inherit; }
     a { color: inherit; }
-    a:focus-visible, button:focus-visible { outline: 3px solid var(--clay); outline-offset: 4px; }
-    .deck-shell { width: min(100%, 1120px); }
-    .deck-topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 0 0 13px; }
-    .brand { color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: -.3px; text-decoration: none; }
-    .brand span { color: var(--clay); font-family: var(--serif); font-style: italic; font-weight: 500; }
-    .top-actions { display: flex; align-items: center; gap: 10px; }
-    .text-control { border: 0; padding: 7px 0; background: transparent; color: var(--muted); font-size: 11px; font-weight: 600; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; cursor: pointer; }
-    .text-control:hover { color: var(--clay); }
-    .stage { position: relative; overflow: hidden; width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 18px 54px rgba(30,30,28,.08); }
-    .slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; overflow: auto; padding: clamp(30px, 6.3vw, 78px); background: var(--paper); }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid var(--terracotta);
+      outline-offset: 4px;
+    }
+
+    .page-header {
+      display: flex;
+      width: min(1120px, calc(100% - 48px));
+      min-height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .wordmark {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .wordmark span { font-family: var(--serif); font-style: italic; font-weight: 400; }
+    .wordmark i { color: var(--terracotta); font-style: normal; }
+    .back-link {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+    .back-link:hover { color: var(--terracotta); }
+
+    main { padding: 28px 24px 24px; }
+    .deck { width: min(1120px, 100%); margin: 0 auto; }
+    .slide {
+      position: relative;
+      display: flex;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      flex-direction: column;
+      overflow: hidden;
+      padding: clamp(30px, 5vw, 66px);
+      border: 1px solid var(--hairline);
+      background: var(--white);
+      box-shadow: 0 18px 55px rgb(30 30 28 / 7%);
+      animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
     .slide[hidden] { display: none; }
-    .slide::after { position: absolute; right: clamp(30px, 6.3vw, 78px); bottom: 22px; left: clamp(30px, 6.3vw, 78px); height: 1px; background: var(--line); content: ""; }
-    .slide-footer { position: absolute; right: clamp(30px, 6.3vw, 78px); bottom: 28px; left: clamp(30px, 6.3vw, 78px); display: flex; justify-content: space-between; gap: 16px; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
-    .eyebrow, .mono-tag { color: var(--clay); font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
-    .eyebrow { margin: 0 0 16px; }
-    .mono-tag { display: inline-block; border: 1px solid var(--line); padding: 6px 9px; color: var(--muted); font-size: 9px; }
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide-topline, .slide-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .slide-topline {
+      color: var(--muted);
+      font: 10px/1.4 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .slide-foot {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--hairline);
+      color: var(--muted);
+      font: 9px/1.4 var(--mono);
+      letter-spacing: 0.04em;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--terracotta);
+      font: 10px/1.4 var(--mono);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
     h1, h2, h3, p { margin-top: 0; }
-    h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.045em; line-height: 1.06; }
-    h1 { max-width: 820px; margin-bottom: 20px; font-size: clamp(42px, 6.5vw, 78px); }
-    h2 { max-width: 850px; margin-bottom: 27px; font-size: clamp(34px, 4.5vw, 54px); }
-    h3 { font-family: var(--serif); font-weight: 500; line-height: 1.2; }
-    .accent { color: var(--clay); font-style: italic; }
-    .deck-subtitle { max-width: 600px; margin-bottom: 26px; color: var(--muted); font-size: clamp(14px, 1.6vw, 18px); }
-    .cover-context { color: var(--muted); font-size: 12px; }
-    .cover-rule { width: 66px; height: 2px; margin: 5px 0 24px; background: var(--clay); }
-    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
-    .kpi-card, .compare-card, .flow-card, .roadmap-card { border: 1px solid var(--line); background: var(--paper); }
-    .kpi-card { min-height: 190px; padding: clamp(16px, 2.3vw, 27px); }
-    .kpi-value { margin: 0 0 10px; color: var(--clay); font-family: var(--serif); font-size: clamp(36px, 5vw, 56px); letter-spacing: -.04em; line-height: 1; }
-    .kpi-label { margin-bottom: 9px; font-size: 12px; font-weight: 700; }
-    .kpi-detail { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .compare-card { padding: clamp(18px, 2.8vw, 32px); }
-    .compare-card.after { border-top: 3px solid var(--clay); }
-    .compare-label { margin-bottom: 13px; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
-    .compare-card h3 { margin: 0 0 11px; font-size: clamp(21px, 2.4vw, 29px); }
-    .compare-card p { margin-bottom: 14px; color: var(--muted); font-size: 11px; }
-    .check-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; color: var(--ink); font-size: 10px; }
-    .check-list li::before { margin-right: 8px; color: var(--clay); content: "—"; }
-    .chart-layout { display: grid; grid-template-columns: 1.45fr .8fr; align-items: center; gap: clamp(22px, 4vw, 48px); }
-    .chart-panel { min-width: 0; padding: 20px 20px 15px; border: 1px solid var(--line); background: var(--paper); }
-    .chart-title { margin: 0 0 13px; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
-    .chart-wrap { position: relative; height: clamp(195px, 26vh, 280px); }
-    .chart-status { min-height: 1.5em; margin: 10px 0 0; color: var(--muted); font-size: 10px; }
-    .insight { padding-left: 20px; border-left: 2px solid var(--clay); }
-    .insight strong { display: block; margin-bottom: 10px; font-family: var(--serif); font-size: clamp(22px, 2.5vw, 31px); font-weight: 500; line-height: 1.2; }
-    .insight p { margin: 0; color: var(--muted); font-size: 11px; }
-    .insight-stat { display: block; margin-top: 18px; color: var(--clay); font-family: var(--mono); font-size: 10px; }
-    .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .flow-card { position: relative; min-height: 188px; padding: 23px; }
-    .flow-card:not(:last-child)::after { position: absolute; top: 50%; right: -17px; z-index: 1; color: var(--clay); font-size: 18px; content: "→"; }
-    .step-number { color: var(--clay); font-family: var(--mono); font-size: 10px; letter-spacing: .1em; }
-    .flow-card h3 { margin: 25px 0 9px; font-size: 21px; }
-    .flow-card p { margin: 0; color: var(--muted); font-size: 11px; }
-    .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
-    .roadmap-card { padding: 18px; }
-    .roadmap-card .period { color: var(--clay); font-family: var(--mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
-    .roadmap-card h3 { margin: 7px 0 12px; font-size: 23px; }
-    .roadmap-card ul { display: grid; gap: 7px; margin: 0 0 14px; padding-left: 15px; color: var(--muted); font-size: 10px; }
-    .roadmap-outcome { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--ink); font-size: 10px; font-weight: 600; }
-    .closing-recommendation { max-width: 720px; margin: 0 0 26px; color: var(--muted); font-size: clamp(15px, 1.8vw, 20px); }
-    .closing-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: 11px; font-weight: 700; transition: transform .2s var(--ease-out), background-color .2s ease; }
-    .closing-cta:hover { transform: translateY(-2px); background: var(--clay); }
-    .source-note { margin-top: 22px; color: var(--muted); font-family: var(--mono); font-size: 9px; }
-    .deck-controls { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; margin-top: 14px; }
-    .nav-group { display: flex; gap: 8px; }
-    .nav-button, .print-button { min-height: 39px; padding: 0 15px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-size: 11px; font-weight: 600; cursor: pointer; transition: transform .2s var(--ease-out), background-color .2s ease, color .2s ease, border-color .2s ease; }
-    .nav-button:hover:not(:disabled), .print-button:hover { transform: translateY(-2px); border-color: var(--ink); }
-    .nav-button:active, .print-button:active { transform: translateY(0); }
-    .nav-button:disabled { color: #99968e; cursor: not-allowed; opacity: .7; }
-    .counter { color: var(--muted); font-family: var(--mono); font-size: 11px; font-variant-numeric: tabular-nums; }
-    .print-button { justify-self: end; border-color: var(--ink); background: var(--ink); color: var(--paper); }
-    .print-button:hover { background: var(--clay); border-color: var(--clay); }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    .slide h2 {
+      max-width: 850px;
+      margin-bottom: 15px;
+      font-size: clamp(34px, 4.5vw, 58px);
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+    }
+    .deck-subtitle { margin: 0; color: var(--muted); font-size: clamp(13px, 1.5vw, 17px); }
+    .cover-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 0 32px;
+    }
+    .cover-content h1 {
+      max-width: 820px;
+      margin: 0 0 22px;
+      font-size: clamp(54px, 8vw, 104px);
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+    .cover-content h1 em { color: var(--terracotta); font-style: normal; }
+    .cover-context { margin: 25px 0 0; color: var(--muted); font-size: 13px; }
+    .context-mark {
+      display: inline-block;
+      width: 42px;
+      height: 2px;
+      margin-bottom: 22px;
+      background: var(--terracotta);
+    }
+
+    .kpi-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 18px;
+      margin: 18px 0 26px;
+    }
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      padding: clamp(17px, 2.4vw, 30px);
+      border: 1px solid var(--hairline);
+      background: var(--cream);
+    }
+    .kpi-value {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--terracotta);
+      font: 500 clamp(31px, 4.1vw, 52px)/1.05 var(--serif);
+      letter-spacing: -0.04em;
+    }
+    .kpi-label { margin-bottom: 11px; font-size: clamp(14px, 1.6vw, 18px); font-weight: 600; }
+    .kpi-card p { margin: 0; color: var(--muted); font-size: clamp(11px, 1.1vw, 13px); line-height: 1.65; }
+
+    .comparison-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 14px 0 24px;
+    }
+    .comparison-card {
+      padding: clamp(19px, 2.5vw, 31px);
+      border: 1px solid var(--hairline);
+      background: var(--cream);
+    }
+    .comparison-card.after { border-top: 3px solid var(--terracotta); background: #fff; }
+    .comparison-tag {
+      display: block;
+      margin-bottom: 13px;
+      color: var(--muted);
+      font: 10px/1.4 var(--mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .comparison-card h3 { margin: 0 0 10px; font-size: clamp(22px, 2.8vw, 34px); line-height: 1.13; }
+    .comparison-card p { margin: 0 0 13px; color: var(--muted); font-size: clamp(11px, 1.2vw, 13px); }
+    .comparison-card ul { display: grid; gap: 7px; margin: 0; padding-left: 17px; color: var(--muted); font-size: clamp(10px, 1.1vw, 12px); }
+    .comparison-card li::marker { color: var(--terracotta); }
+
+    .chart-slide { min-height: 0; }
+    .chart-heading { margin-bottom: 10px; }
+    .chart-heading h2 { margin-bottom: 8px; }
+    .chart-subtitle { margin: 0; color: var(--muted); font-size: 12px; }
+    .chart-grid {
+      display: grid;
+      min-height: 0;
+      flex: 1;
+      grid-template-columns: minmax(0, 1.55fr) minmax(180px, 0.8fr);
+      align-items: center;
+      gap: clamp(18px, 4vw, 48px);
+      margin: 12px 0 14px;
+    }
+    .chart-wrap { position: relative; width: 100%; height: 100%; min-height: 180px; }
+    .chart-insight {
+      padding: 19px;
+      border-left: 2px solid var(--terracotta);
+      background: var(--cream);
+    }
+    .chart-insight h3 { margin: 0 0 10px; font-size: 21px; }
+    .chart-insight p { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+    .chart-insight .chart-summary { margin: 0; color: var(--ink); font-size: 11px; font-weight: 600; }
+    .chart-status { margin: 0; color: var(--muted); font-size: 11px; }
+    .chart-status[data-state="error"] { color: #8e351c; }
+    .chart-note { margin: 0; color: var(--muted); font: 9px/1.5 var(--mono); }
+
+    .flow-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: center;
+      gap: 30px;
+      margin: 10px 0 25px;
+    }
+    .flow-step {
+      position: relative;
+      min-height: 190px;
+      padding: 24px 20px;
+      border: 1px solid var(--hairline);
+      background: var(--cream);
+    }
+    .flow-step:not(:last-child)::after {
+      position: absolute;
+      top: 50%;
+      right: -25px;
+      color: var(--terracotta);
+      content: "→";
+      font-size: 23px;
+      transform: translateY(-50%);
+    }
+    .step-number { color: var(--terracotta); font: 11px/1.4 var(--mono); }
+    .flow-step h3 { margin: 22px 0 10px; font-size: clamp(19px, 2.2vw, 27px); line-height: 1.12; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: clamp(10px, 1.1vw, 12px); }
+
+    .roadmap-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin: 9px 0 22px;
+    }
+    .roadmap-phase {
+      display: flex;
+      flex-direction: column;
+      padding: clamp(16px, 2vw, 24px);
+      border: 1px solid var(--hairline);
+      background: var(--cream);
+    }
+    .roadmap-period { margin: 0 0 9px; color: var(--terracotta); font: 10px/1.4 var(--mono); }
+    .roadmap-phase h3 { margin: 0 0 12px; font-size: clamp(21px, 2.5vw, 30px); }
+    .roadmap-phase ul { display: grid; gap: 8px; margin: 0 0 15px; padding-left: 16px; color: var(--muted); font-size: clamp(10px, 1vw, 12px); }
+    .roadmap-phase li::marker { color: var(--terracotta); }
+    .roadmap-outcome { margin: auto 0 0; padding-top: 13px; border-top: 1px solid var(--hairline); font-size: clamp(10px, 1vw, 12px); font-weight: 600; }
+    .outcome-label { display: block; margin-bottom: 5px; color: var(--muted); font: 9px/1.4 var(--mono); text-transform: uppercase; }
+
+    .closing-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px 0 30px;
+    }
+    .closing-content h2 { max-width: 800px; font-size: clamp(45px, 6.5vw, 82px); }
+    .recommendation { max-width: 650px; margin: 5px 0 25px; color: var(--muted); font-size: clamp(14px, 1.7vw, 19px); }
+    .closing-cta {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      padding: 0 19px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .closing-cta:hover { background: var(--terracotta); }
+
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 17px 0 4px;
+    }
+    .control-button {
+      min-height: 39px;
+      padding: 0 15px;
+      border: 1px solid var(--hairline);
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .control-button:hover:not(:disabled) { border-color: var(--ink); }
+    .control-button:disabled { color: #8c8982; cursor: not-allowed; }
+    .print-button { border-color: var(--ink); background: var(--ink); color: var(--white); }
+    .print-button:hover { background: var(--terracotta); border-color: var(--terracotta); }
+    .slide-counter {
+      min-width: 55px;
+      color: var(--muted);
+      font: 11px/1 var(--mono);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .keyboard-hint { width: 100%; margin: 1px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
+
     @media (max-width: 720px) {
-      body { justify-content: flex-start; padding: 12px; }
-      .stage { aspect-ratio: auto; min-height: 620px; }
-      .slide { position: relative; min-height: 620px; padding: 30px 24px 70px; }
-      .slide::after { right: 24px; left: 24px; }
-      .slide-footer { right: 24px; left: 24px; }
-      .kpi-grid, .flow-grid, .roadmap { grid-template-columns: 1fr; gap: 10px; }
-      .kpi-card { min-height: auto; }
-      .compare-grid, .chart-layout { grid-template-columns: 1fr; gap: 14px; }
-      .chart-wrap { height: 220px; }
-      .flow-card { min-height: auto; padding: 16px; }
-      .flow-card h3 { margin-top: 9px; }
-      .flow-card:not(:last-child)::after { display: none; }
-      .roadmap-card { padding: 13px 15px; }
-      .roadmap-card h3 { margin: 4px 0 7px; }
-      .roadmap-card ul { gap: 4px; margin-bottom: 8px; }
-      .insight { padding-left: 14px; }
+      main { padding: 18px 14px; }
+      .page-header { width: calc(100% - 28px); min-height: 58px; }
+      .slide { min-height: 620px; aspect-ratio: auto; padding: 28px 23px; }
+      .slide h2 { font-size: clamp(34px, 9vw, 49px); }
+      .cover-content h1 { font-size: clamp(52px, 13vw, 78px); }
+      .kpi-grid { grid-template-columns: 1fr; gap: 9px; margin: 11px 0 18px; }
+      .kpi-card { padding: 15px 18px; }
+      .kpi-value { margin-bottom: 4px; font-size: 35px; }
+      .kpi-label { margin-bottom: 4px; }
+      .comparison-grid { gap: 10px; margin: 7px 0 18px; }
+      .comparison-card { padding: 15px 12px; }
+      .comparison-card h3 { font-size: 21px; }
+      .chart-grid { grid-template-columns: 1fr; gap: 12px; }
+      .chart-wrap { min-height: 235px; }
+      .chart-insight { padding: 12px 15px; }
+      .chart-insight h3 { font-size: 18px; }
+      .flow-grid { grid-template-columns: 1fr; gap: 13px; margin: 5px 0 17px; }
+      .flow-step { min-height: 0; padding: 16px; }
+      .flow-step h3 { margin: 9px 0 6px; }
+      .flow-step:not(:last-child)::after {
+        top: auto;
+        right: 50%;
+        bottom: -19px;
+        transform: translateX(50%) rotate(90deg);
+      }
+      .roadmap-grid { grid-template-columns: 1fr; gap: 9px; margin: 5px 0 17px; }
+      .roadmap-phase { padding: 14px 16px; }
+      .roadmap-phase h3 { margin-bottom: 5px; }
+      .roadmap-phase ul { gap: 4px; margin-bottom: 8px; }
+      .roadmap-outcome { padding-top: 8px; }
     }
     @media (max-width: 420px) {
-      body { padding: 9px; }
-      .deck-topbar { align-items: flex-start; }
-      .top-actions { gap: 8px; }
-      .text-control { font-size: 10px; }
-      .deck-controls { grid-template-columns: 1fr auto; }
-      .counter { grid-column: 2; grid-row: 1; }
-      .print-button { grid-column: 1 / -1; justify-self: stretch; }
-      .nav-button { padding-inline: 11px; }
+      .slide { padding: 22px 17px; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .comparison-card p { margin-bottom: 8px; }
+      .comparison-card ul { gap: 4px; }
+      .deck-controls { gap: 7px; }
+      .control-button { padding-inline: 10px; }
+      .keyboard-hint { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
     @media print {
-      @page { size: 13.333in 7.5in; margin: 0; }
-      html, body { width: 100%; height: auto; min-height: 0; margin: 0; padding: 0; display: block; background: #fff !important; background-image: none !important; color: #1E1E1C !important; }
-      .deck-topbar, .deck-controls { display: none !important; }
-      .deck-shell { width: 100%; max-width: none; }
-      .stage { width: 100%; height: 100vh; max-height: 7.5in; overflow: visible; aspect-ratio: 16 / 9; border: 0; box-shadow: none; break-after: page; page-break-after: always; }
-      .stage:last-of-type { break-after: auto; page-break-after: auto; }
-      .slide, .slide[hidden] { position: absolute; inset: 0; display: flex !important; overflow: hidden; padding: .65in .8in; background: #fff !important; color: #1E1E1C !important; }
-      .slide::after { right: .8in; left: .8in; }
-      .slide-footer { right: .8in; left: .8in; }
-      .kpi-card, .compare-card, .flow-card, .roadmap-card, .chart-panel { background: #fff !important; box-shadow: none !important; break-inside: avoid; }
-      .chart-wrap { height: 2.4in; }
-      .chart-status { color: #5C5B57 !important; }
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      @page { size: landscape; margin: 0; }
+      html, body { width: 100%; min-width: 0; min-height: 0; background: #fff !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page-header, .deck-controls { display: none !important; }
+      main { padding: 0; }
+      .deck { width: 100%; margin: 0; }
+      .slide, .slide[hidden] {
+        display: flex !important;
+        width: 100%;
+        height: 100vh;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        padding: 8vh 8vw;
+        overflow: hidden;
+        border: 0;
+        box-shadow: none;
+        animation: none;
+        break-after: page;
+        page-break-after: always;
+      }
+      .slide:last-child { break-after: auto; page-break-after: auto; }
+      .chart-wrap { min-height: 0; }
+      .kpi-card, .comparison-card, .flow-step, .roadmap-phase, .chart-insight { break-inside: avoid; }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
 </head>
 <body>
-  <main class="deck-shell" aria-label="Retail Q4 executive presentation">
-    <header class="deck-topbar">
-      <a class="brand" href="../work.html" aria-label="Back to portfolio">studio <span>clarity</span></a>
-      <div class="top-actions">
-        <a class="text-control" href="../work.html">← Back to Portfolio</a>
-        <span class="mono-tag">Executive brief · Q4 2026</span>
-      </div>
-    </header>
-
-    <div class="stage" id="presentation" aria-label="Presentation slides">
-      <section class="slide" id="slide-1" aria-labelledby="slide-1-title">
-        <p class="eyebrow">Studio Clarity · Executive Revenue &amp; Customer Retention Brief</p>
-        <div class="cover-rule" aria-hidden="true"></div>
-        <h1 id="slide-1-title">From Scattered Data<br>to Clear <span class="accent">Q4 Direction</span></h1>
-        <p class="deck-subtitle">Executive Revenue &amp; Customer Retention Brief | Studio Clarity</p>
-        <p class="cover-context">Retail performance story across North America, Europe, APAC, and LATAM</p>
-        <div class="slide-footer"><span>Retail performance · Q1–Q3 2026</span><span>01 / 07</span></div>
+  <header class="page-header">
+    <a class="wordmark" href="../work.html" aria-label="Studio Clarity — back to portfolio">studio <span>clarity</span><i>.</i></a>
+    <a class="back-link" href="../work.html">← Back to Portfolio</a>
+  </header>
+  <main>
+    <div class="deck" aria-label="Executive Revenue and Customer Retention Brief">
+      <section class="slide" id="slide-1" role="group" aria-roledescription="slide" aria-label="Slide 1 of 7">
+        <div class="slide-topline"><span>Studio Clarity</span><span>Executive brief · Q4 2026</span></div>
+        <div class="cover-content">
+          <span class="context-mark" aria-hidden="true"></span>
+          <p class="eyebrow">Revenue &amp; customer retention</p>
+          <h1>From Scattered Data to <em>Clear Q4 Direction</em></h1>
+          <p class="deck-subtitle">Executive Revenue &amp; Customer Retention Brief | Studio Clarity</p>
+          <p class="cover-context">Retail performance across North America, Europe, APAC, and LATAM</p>
+        </div>
+        <div class="slide-foot"><span>Source: retail performance data</span><span>01 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-2" aria-labelledby="slide-2-title" hidden>
-        <p class="eyebrow">01 — Executive summary</p>
-        <h2 id="slide-2-title">Three signals set the Q4 direction</h2>
+      <section class="slide" id="slide-2" role="group" aria-roledescription="slide" aria-label="Slide 2 of 7" hidden>
+        <div class="slide-topline"><span>01 / Executive summary</span><span>Three signals · one direction</span></div>
+        <div>
+          <p class="eyebrow">The Q4 opportunity</p>
+          <h2>Three signals set the Q4 direction</h2>
+        </div>
         <div class="kpi-grid">
-          <article class="kpi-card"><p class="kpi-value">+22%</p><p class="kpi-label">Repeat Orders</p><p class="kpi-detail">Retention momentum creates a clearer path to Q4 growth</p></article>
-          <article class="kpi-card"><p class="kpi-value">−14%</p><p class="kpi-label">Fulfillment Drag</p><p class="kpi-detail">Operational friction is falling across the customer journey</p></article>
-          <article class="kpi-card"><p class="kpi-value">$1.4M</p><p class="kpi-label">Untapped Upside</p><p class="kpi-detail">Prioritized revenue opportunity ready for executive action</p></article>
+          <article class="kpi-card">
+            <span class="kpi-value">+22%</span>
+            <span class="kpi-label">Repeat Orders</span>
+            <p>Retention momentum creates a clearer path to Q4 growth.</p>
+          </article>
+          <article class="kpi-card">
+            <span class="kpi-value">−14%</span>
+            <span class="kpi-label">Fulfillment Drag</span>
+            <p>Operational friction is falling across the customer journey.</p>
+          </article>
+          <article class="kpi-card">
+            <span class="kpi-value">$1.4M</span>
+            <span class="kpi-label">Untapped Upside</span>
+            <p>Prioritized revenue opportunity ready for executive action.</p>
+          </article>
         </div>
-        <div class="slide-footer"><span>Three decision-relevant metrics</span><span>02 / 07</span></div>
+        <div class="slide-foot"><span>Focus on repeat behavior, delivery, and growth capacity</span><span>02 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-3" aria-labelledby="slide-3-title" hidden>
-        <p class="eyebrow">02 — The operating shift</p>
-        <h2 id="slide-3-title">From fragmented reporting to one decision view</h2>
-        <div class="compare-grid">
-          <article class="compare-card">
-            <p class="compare-label">Before</p><h3>6 messy regional CSVs</h3>
+      <section class="slide" id="slide-3" role="group" aria-roledescription="slide" aria-label="Slide 3 of 7" hidden>
+        <div class="slide-topline"><span>02 / The case for clarity</span><span>Before → after</span></div>
+        <div>
+          <p class="eyebrow">One connected view</p>
+          <h2>From fragmented reporting to one decision view</h2>
+        </div>
+        <div class="comparison-grid">
+          <article class="comparison-card">
+            <span class="comparison-tag">Before</span>
+            <h3>6 messy regional CSVs</h3>
             <p>Disconnected exports, inconsistent fields, slow reconciliations, and competing views of performance.</p>
-            <ul class="check-list"><li>Regional data landed in separate files</li><li>Definitions and formats varied</li><li>Leadership waited for a manual consolidation</li></ul>
+            <ul>
+              <li>Regional data landed in separate files</li>
+              <li>Definitions and formats varied</li>
+              <li>Leadership waited for a manual consolidation</li>
+            </ul>
           </article>
-          <article class="compare-card after">
-            <p class="compare-label">After</p><h3>One clear, connected view</h3>
+          <article class="comparison-card after">
+            <span class="comparison-tag">After</span>
+            <h3>One clear, connected view</h3>
             <p>A consistent regional and segment readout aligned around revenue, margin, retention, LTV, and CAC.</p>
-            <ul class="check-list"><li>One source of truth</li><li>Comparable quarter-over-quarter trends</li><li>Faster, board-ready decisions</li></ul>
+            <ul>
+              <li>One source of truth</li>
+              <li>Comparable quarter-over-quarter trends</li>
+              <li>Faster, board-ready decisions</li>
+            </ul>
           </article>
         </div>
-        <div class="slide-footer"><span>One consistent decision view</span><span>03 / 07</span></div>
+        <div class="slide-foot"><span>From six regional inputs to one source of truth</span><span>03 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-4" aria-labelledby="slide-4-title" hidden>
-        <p class="eyebrow">03 — Live data · Average LTV by customer segment</p>
-        <h2 id="slide-4-title">The data points to Mid-Market as the margin lever</h2>
-        <div class="chart-layout">
-          <div class="chart-panel">
-            <p class="chart-title">Average customer lifetime value · USD · Q1–Q3 2026 observations</p>
-            <div class="chart-wrap"><canvas id="ltv-chart" role="img" aria-label="Horizontal bar chart showing average lifetime value in US dollars for each customer segment, calculated from the retail performance CSV."></canvas></div>
-            <p class="chart-status" id="chart-status" role="status" aria-live="polite">Loading the latest segment averages…</p>
+      <section class="slide chart-slide" id="slide-4" role="group" aria-roledescription="slide" aria-label="Slide 4 of 7" hidden>
+        <div class="slide-topline"><span>03 / Live data view</span><span>Customer value · Q1–Q3 2026</span></div>
+        <div class="chart-heading">
+          <p class="eyebrow">Average LTV by Customer Segment</p>
+          <h2>Mid-Market revenue rose 24% from Q1 to Q3</h2>
+          <p class="chart-subtitle">Average customer lifetime value by segment · account-weighted across the source period</p>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <canvas id="ltv-chart" role="img" aria-label="Horizontal bar chart comparing account-weighted average customer lifetime value in US dollars across customer segments" aria-describedby="chart-summary"></canvas>
           </div>
-          <aside class="insight" aria-label="Chart insight">
-            <strong>Mid-Market delivers about 2.4× the LTV of SMB and DTC.</strong>
-            <p>Across Q1–Q3, Mid-Market leads the SMB and DTC segments in average lifetime value, supporting focused retention and growth investment.</p>
-            <span class="insight-stat" id="midmarket-stat">Average LTV: calculating…</span>
+          <aside class="chart-insight" aria-label="Chart insight">
+            <p class="eyebrow">What stands out</p>
+            <h3>Customer value sets the lens.</h3>
+            <p>Mid-Market revenue grew 24% from Q1 to Q3; its Q3 gross-profit increase was the largest among segments versus Q2.</p>
+            <p class="chart-summary" id="chart-summary" aria-live="polite">Loading segment LTV from the retail performance data…</p>
           </aside>
         </div>
-        <div class="slide-footer"><span>Source: retail performance CSV · aggregated live</span><span>04 / 07</span></div>
+        <p class="chart-status" id="chart-status" role="status" aria-live="polite">Loading chart data…</p>
+        <div class="slide-foot"><span>Mid-Market highlighted · LTV weighted by active accounts</span><span>04 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-5" aria-labelledby="slide-5-title" hidden>
-        <p class="eyebrow">04 — Repeatable process</p>
-        <h2 id="slide-5-title">One repeatable path from inputs to action</h2>
+      <section class="slide" id="slide-5" role="group" aria-roledescription="slide" aria-label="Slide 5 of 7" hidden>
+        <div class="slide-topline"><span>04 / The operating model</span><span>One repeatable path</span></div>
+        <div>
+          <p class="eyebrow">From source to decision</p>
+          <h2>One repeatable path from inputs to action</h2>
+        </div>
         <div class="flow-grid">
-          <article class="flow-card"><span class="step-number">STEP 01</span><h3>Unified Inputs</h3><p>Regional revenue, accounts, margin, retention, LTV, and acquisition data</p></article>
-          <article class="flow-card"><span class="step-number">STEP 02</span><h3>Clean Business Logic</h3><p>Standardize fields, aggregate quarters and segments, and calculate weighted KPIs</p></article>
-          <article class="flow-card"><span class="step-number">STEP 03</span><h3>Board-Ready View</h3><p>Turn the evidence into a focused Q4 narrative, chart, and action plan</p></article>
+          <article class="flow-step">
+            <span class="step-number">STEP 01</span>
+            <h3>Unified Inputs</h3>
+            <p>Regional revenue, accounts, margin, retention, LTV, and acquisition data.</p>
+          </article>
+          <article class="flow-step">
+            <span class="step-number">STEP 02</span>
+            <h3>Clean Business Logic</h3>
+            <p>Standardize fields, aggregate quarters and segments, and calculate weighted KPIs.</p>
+          </article>
+          <article class="flow-step">
+            <span class="step-number">STEP 03</span>
+            <h3>Board-Ready View</h3>
+            <p>Turn the evidence into a focused Q4 narrative, chart, and action plan.</p>
+          </article>
         </div>
-        <div class="slide-footer"><span>Inputs → transformation → outcomes</span><span>05 / 07</span></div>
+        <div class="slide-foot"><span>Consistent definitions turn data into action</span><span>05 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-6" aria-labelledby="slide-6-title" hidden>
-        <p class="eyebrow">05 — Q4 2026 execution plan</p>
-        <h2 id="slide-6-title">90-day roadmap: turn the signal into execution</h2>
-        <div class="roadmap">
-          <article class="roadmap-card"><span class="period">Days 1–30</span><h3>Focus</h3><ul><li>Validate segment and regional baselines</li><li>Prioritize Mid-Market account cohorts</li><li>Define owners for retention and fulfillment measures</li></ul><p class="roadmap-outcome">Outcome: A single approved Q4 scorecard</p></article>
-          <article class="roadmap-card"><span class="period">Days 31–60</span><h3>Activate</h3><ul><li>Launch targeted Mid-Market upsell motions</li><li>Reduce fulfillment bottlenecks in priority regions</li><li>Align acquisition spend with LTV evidence</li></ul><p class="roadmap-outcome">Outcome: Pilots prove lift in repeat orders and margin</p></article>
-          <article class="roadmap-card"><span class="period">Days 61–90</span><h3>Scale</h3><ul><li>Expand winning retention plays</li><li>Shift budget toward highest-LTV segments</li><li>Publish an executive monthly readout</li></ul><p class="roadmap-outcome">Outcome: A repeatable path toward the $1.4M upside</p></article>
+      <section class="slide" id="slide-6" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 6 of 7" hidden>
+        <div class="slide-topline"><span>05 / 90-day roadmap</span><span>Q4 2026</span></div>
+        <div>
+          <p class="eyebrow">Turn the signal into execution</p>
+          <h2>90-day roadmap: turn the signal into execution</h2>
         </div>
-        <div class="slide-footer"><span>Q4 2026 · 90 days</span><span>06 / 07</span></div>
+        <div class="roadmap-grid">
+          <article class="roadmap-phase">
+            <p class="roadmap-period">DAYS 1–30</p>
+            <h3>Focus</h3>
+            <ul>
+              <li>Validate segment and regional baselines</li>
+              <li>Prioritize Mid-Market account cohorts</li>
+              <li>Define owners for retention and fulfillment measures</li>
+            </ul>
+            <p class="roadmap-outcome"><span class="outcome-label">Outcome</span>A single approved Q4 scorecard</p>
+          </article>
+          <article class="roadmap-phase">
+            <p class="roadmap-period">DAYS 31–60</p>
+            <h3>Activate</h3>
+            <ul>
+              <li>Launch targeted Mid-Market upsell motions</li>
+              <li>Reduce fulfillment bottlenecks in priority regions</li>
+              <li>Align acquisition spend with LTV evidence</li>
+            </ul>
+            <p class="roadmap-outcome"><span class="outcome-label">Outcome</span>Pilots prove lift in repeat orders and margin</p>
+          </article>
+          <article class="roadmap-phase">
+            <p class="roadmap-period">DAYS 61–90</p>
+            <h3>Scale</h3>
+            <ul>
+              <li>Expand winning retention plays</li>
+              <li>Shift budget toward highest-LTV segments</li>
+              <li>Publish an executive monthly readout</li>
+            </ul>
+            <p class="roadmap-outcome"><span class="outcome-label">Outcome</span>A repeatable path toward the $1.4M upside</p>
+          </article>
+        </div>
+        <div class="slide-foot"><span>Focus → activate → scale</span><span>06 / 07</span></div>
       </section>
 
-      <section class="slide" id="slide-7" aria-labelledby="slide-7-title" hidden>
-        <p class="eyebrow">06 — Recommendation</p>
-        <h2 id="slide-7-title">Make Q4 the quarter that follows the clearest <span class="accent">signal</span></h2>
-        <p class="closing-recommendation">Concentrate capacity and investment on Mid-Market growth, retention, and fulfillment improvements.</p>
-        <div><a class="closing-cta" href="mailto:?subject=Approve%20the%2090-day%20Q4%20action%20plan">Approve the 90-day Q4 action plan <span aria-hidden="true">&nbsp;→</span></a></div>
-        <p class="source-note">Source: ../data/retail-q4/retail_performance.csv</p>
-        <div class="slide-footer"><span>Studio Clarity · Retail Q4 direction</span><span>07 / 07</span></div>
+      <section class="slide" id="slide-7" role="group" aria-roledescription="slide" aria-label="Slide 7 of 7" hidden>
+        <div class="slide-topline"><span>06 / The decision</span><span>Q4 2026</span></div>
+        <div class="closing-content">
+          <p class="eyebrow">A clear next move</p>
+          <h2>Make Q4 the quarter that follows the clearest signal</h2>
+          <p class="recommendation">Concentrate capacity and investment on Mid-Market growth, retention, and fulfillment improvements.</p>
+          <a class="closing-cta" id="roadmap-cta" href="#slide-6">Approve the 90-day Q4 action plan <span aria-hidden="true">&nbsp;→</span></a>
+        </div>
+        <div class="slide-foot"><span>Executive Revenue &amp; Customer Retention Brief | Studio Clarity</span><span>07 / 07</span></div>
       </section>
     </div>
-
     <nav class="deck-controls" aria-label="Slide navigation">
-      <div class="nav-group">
-        <button class="nav-button" id="prev-button" type="button" aria-label="Previous slide">← Previous</button>
-        <button class="nav-button" id="next-button" type="button" aria-label="Next slide">Next →</button>
-      </div>
-      <output class="counter" id="slide-counter" aria-live="polite" aria-atomic="true">1 / 7</output>
-      <button class="print-button" id="print-button" type="button">Save / Print PDF</button>
+      <button class="control-button" id="prev-slide" type="button" aria-label="Previous slide" disabled>← Previous</button>
+      <span class="slide-counter" id="slide-counter" aria-live="polite" aria-atomic="true">1 / 7</span>
+      <button class="control-button" id="next-slide" type="button" aria-label="Next slide">Next →</button>
+      <button class="control-button print-button" id="print-deck" type="button">Save / Print PDF</button>
+      <p class="keyboard-hint">Use ← and → arrow keys to navigate</p>
     </nav>
   </main>
-
   <script>
-    (() => {
+    document.addEventListener('DOMContentLoaded', function () {
       const slides = Array.from(document.querySelectorAll('.slide'));
-      const previousButton = document.getElementById('prev-button');
-      const nextButton = document.getElementById('next-button');
+      const previousButton = document.getElementById('prev-slide');
+      const nextButton = document.getElementById('next-slide');
       const counter = document.getElementById('slide-counter');
-      let currentSlide = 0;
+      let activeSlide = 0;
 
       function showSlide(index) {
-        currentSlide = Math.max(0, Math.min(index, slides.length - 1));
-        slides.forEach((slide, slideIndex) => {
-          const isActive = slideIndex === currentSlide;
+        activeSlide = Math.max(0, Math.min(index, slides.length - 1));
+        slides.forEach(function (slide, slideIndex) {
+          const isActive = slideIndex === activeSlide;
           slide.hidden = !isActive;
           slide.setAttribute('aria-hidden', String(!isActive));
         });
-        previousButton.disabled = currentSlide === 0;
-        nextButton.disabled = currentSlide === slides.length - 1;
-        counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        counter.textContent = (activeSlide + 1) + ' / ' + slides.length;
+        previousButton.disabled = activeSlide === 0;
+        nextButton.disabled = activeSlide === slides.length - 1;
       }
 
-      previousButton.addEventListener('click', () => showSlide(currentSlide - 1));
-      nextButton.addEventListener('click', () => showSlide(currentSlide + 1));
-      document.getElementById('print-button').addEventListener('click', () => window.print());
-      document.addEventListener('keydown', event => {
+      previousButton.addEventListener('click', function () { showSlide(activeSlide - 1); });
+      nextButton.addEventListener('click', function () { showSlide(activeSlide + 1); });
+      document.getElementById('print-deck').addEventListener('click', function () { window.print(); });
+      document.getElementById('roadmap-cta').addEventListener('click', function (event) {
+        event.preventDefault();
+        showSlide(5);
+        slides[5].focus();
+      });
+      document.addEventListener('keydown', function (event) {
         const target = event.target;
-        const isTyping = target instanceof HTMLElement && (
-          target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)
-        );
-        if (isTyping || event.altKey || event.ctrlKey || event.metaKey) return;
+        const isEditing = target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"]');
+        if (isEditing || event.altKey || event.ctrlKey || event.metaKey) return;
         if (event.key === 'ArrowLeft') {
           event.preventDefault();
-          showSlide(currentSlide - 1);
+          showSlide(activeSlide - 1);
         } else if (event.key === 'ArrowRight') {
           event.preventDefault();
-          showSlide(currentSlide + 1);
+          showSlide(activeSlide + 1);
         }
       });
       showSlide(0);
 
       const status = document.getElementById('chart-status');
-      const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+      const summary = document.getElementById('chart-summary');
+      const canvas = document.getElementById('ltv-chart');
+
+      function showChartError(message) {
+        status.dataset.state = 'error';
+        status.textContent = message;
+        summary.textContent = 'The Average LTV chart is unavailable. The executive story and action plan remain available.';
+      }
 
       async function loadLtvChart() {
-        const canvas = document.getElementById('ltv-chart');
+        if (!window.Papa || !window.Chart) {
+          showChartError('The chart libraries could not load. Check your connection and reload to try again.');
+          return;
+        }
         try {
-          if (!window.Papa || !window.Chart) throw new Error('Chart libraries did not load. Check your connection and reload the deck.');
           const response = await fetch('../data/retail-q4/retail_performance.csv');
-          if (!response.ok) throw new Error(`Could not load retail data (${response.status}).`);
+          if (!response.ok) throw new Error('Could not load CSV (' + response.status + ')');
           const csvText = await response.text();
-          const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true, dynamicTyping: true });
+          const parsed = window.Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true,
+            dynamicTyping: true
+          });
           if (parsed.errors.length) console.warn('CSV parsing warnings:', parsed.errors);
-          const valuesBySegment = new Map();
-          parsed.data.forEach(row => {
-            const segment = String(row.Segment || '').trim();
-            const ltv = Number(row.Avg_LTV_USD);
-            if (!segment || !Number.isFinite(ltv) || ltv <= 0) return;
-            if (!valuesBySegment.has(segment)) valuesBySegment.set(segment, []);
-            valuesBySegment.get(segment).push(ltv);
-          });
-          const labels = Array.from(valuesBySegment.keys());
-          const averages = labels.map(segment => {
-            const values = valuesBySegment.get(segment);
-            return values.reduce((sum, value) => sum + value, 0) / values.length;
-          });
-          if (!labels.length) throw new Error('No valid Average LTV values were found in the CSV.');
-          const topValue = Math.max(...averages);
-          const colors = averages.map(value => value === topValue ? '#B85D38' : '#DCD5C9');
+          if (!parsed.data.length) throw new Error('The CSV contains no data rows.');
 
-          new Chart(canvas, {
+          const requiredFields = ['Segment', 'Active_Accounts', 'Avg_LTV_USD'];
+          const missingFields = requiredFields.filter(function (field) {
+            return !Object.prototype.hasOwnProperty.call(parsed.data[0], field);
+          });
+          if (missingFields.length) throw new Error('The CSV is missing required fields: ' + missingFields.join(', '));
+
+          const aggregates = new Map();
+          let skippedRows = 0;
+          parsed.data.forEach(function (row) {
+            const accounts = Number(row.Active_Accounts);
+            const ltv = Number(row.Avg_LTV_USD);
+            if (!row.Segment || !Number.isFinite(accounts) || accounts <= 0 || !Number.isFinite(ltv) || ltv < 0) {
+              skippedRows += 1;
+              return;
+            }
+            const current = aggregates.get(row.Segment) || { weightedLtv: 0, accounts: 0 };
+            current.weightedLtv += ltv * accounts;
+            current.accounts += accounts;
+            aggregates.set(row.Segment, current);
+          });
+
+          const segments = ['Enterprise', 'Mid-Market', 'SMB', 'DTC'].filter(function (segment) {
+            return aggregates.has(segment);
+          });
+          if (!segments.length) throw new Error('No valid segment LTV records were found in the CSV.');
+          const values = segments.map(function (segment) {
+            const aggregate = aggregates.get(segment);
+            return aggregate.weightedLtv / aggregate.accounts;
+          });
+          const highestIndex = values.indexOf(Math.max.apply(null, values));
+          const highestSegment = segments[highestIndex];
+          const highestValue = values[highestIndex];
+          const formatUsd = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+          });
+
+          new window.Chart(canvas, {
             type: 'bar',
             data: {
-              labels,
+              labels: segments,
               datasets: [{
-                label: 'Average LTV (USD)',
-                data: averages,
-                backgroundColor: colors,
-                borderColor: colors,
-                borderWidth: 1,
-                borderRadius: 2,
-                barThickness: 24
+                label: 'Average LTV',
+                data: values,
+                backgroundColor: segments.map(function (segment) {
+                  return segment === 'Mid-Market' ? '#B85D38' : '#DCD5C9';
+                }),
+                borderWidth: 0,
+                borderRadius: 3,
+                barThickness: 26
               }]
             },
             options: {
               indexAxis: 'y',
               responsive: true,
               maintainAspectRatio: false,
-              animation: { duration: 600, easing: 'easeOutCubic' },
+              animation: { duration: 350 },
               plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: context => ` Average LTV: ${money.format(context.parsed.x)}` } }
+                tooltip: {
+                  callbacks: {
+                    label: function (context) { return ' Average LTV: ' + formatUsd.format(context.parsed.x); }
+                  }
+                }
               },
               scales: {
                 x: {
                   beginAtZero: true,
-                  grid: { color: 'rgba(229,224,216,.55)', drawBorder: false },
+                  grid: { display: false },
                   border: { display: false },
-                  ticks: { color: '#5C5B57', maxTicksLimit: 5, callback: value => `$${Number(value) / 1000}k` }
+                  ticks: {
+                    color: '#5C5B57',
+                    callback: function (value) { return '$' + (Number(value) / 1000).toFixed(0) + 'k'; }
+                  }
                 },
                 y: {
                   grid: { display: false },
                   border: { display: false },
-                  ticks: { color: '#1E1E1C', font: { family: 'Inter, Arial, sans-serif', size: 11 } }
+                  ticks: { color: '#1E1E1C', font: { family: 'Inter', size: 12 } }
                 }
               }
             }
           });
-          const midMarketIndex = labels.indexOf('Mid-Market');
-          const midMarket = midMarketIndex >= 0 ? averages[midMarketIndex] : null;
-          document.getElementById('midmarket-stat').textContent = midMarket === null
-            ? 'Mid-Market average unavailable in this data.'
-            : `Mid-Market average LTV: ${money.format(midMarket)}`;
-          status.textContent = `Chart loaded from ${parsed.data.length} CSV records. Values are averages across all available regional and quarterly observations.`;
+
+          summary.textContent = highestSegment + ' has the highest account-weighted average LTV at ' + formatUsd.format(highestValue) + '. Mid-Market is highlighted as the strategic focus.';
+          status.dataset.state = 'loaded';
+          status.textContent = 'Average LTV is account-weighted across all valid regional-quarter rows.' +
+            (skippedRows ? ' ' + skippedRows + ' invalid row(s) were excluded.' : '');
         } catch (error) {
-          console.error('Unable to render Average LTV chart:', error);
-          status.textContent = `${error.message} The chart data is currently unavailable.`;
-          canvas.setAttribute('aria-label', `Average LTV chart unavailable. ${error.message}`);
-          document.getElementById('midmarket-stat').textContent = 'Mid-Market average unavailable.';
+          console.error('Unable to render the Average LTV chart:', error);
+          showChartError('Chart data could not be loaded: ' + error.message);
         }
       }
 
       loadLtvChart();
-    })();
+    });
   </script>
 </body>
 </html>
